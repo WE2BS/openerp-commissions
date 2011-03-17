@@ -8,6 +8,7 @@
             <field name="model">sale.order</field>
             <field name="arch" type="xml">
                 <data>
+                    <!-- Sale order line modifications -->
                     <xpath expr="//page[@string='Order Line']/separator[@string='Taxes']" position="before">
                         <separator colspan="5" string="Commission"/>
                         <field name="supplier_id" attrs="{'readonly': [('product_id', '=', False)]}"
@@ -18,6 +19,16 @@
                     <xpath expr="//tree[@string='Sales Order Lines']/field[@name='discount']" position="before">
                         <field name="supplier_id"/>
                         <field name="commission"/>
+                    </xpath>
+                    <!-- Sale order modifications -->
+                    <xpath expr="//button[@name='manual_invoice']" position="replace">
+                        <button name="create_commission_invoice" string="Make commissions invoices"/>
+                    </xpath>
+                    <xpath expr="//field[@name='amount_tax']" position="after">
+                        <field name="total_commissions" readonly="1"/>
+                    </xpath>
+                    <xpath expr="//button[@string='Advance Invoice']" position="attributes">
+                        <attribute name="invisible">1</attribute>
                     </xpath>
                 </data>
             </field>

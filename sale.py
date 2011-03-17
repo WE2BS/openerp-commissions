@@ -20,6 +20,65 @@
 from osv import osv, fields
 from tools.translate import _
 
+class SaleOrderMeta(type):
+
+    """
+    We create a metaclass to add a selection value to order_policy field.
+    """
+
+    def __new__(mcs, *args, **kwargs):
+
+        cls = super(SaleOrderMeta, mcs).__new__(mcs, *args, **kwargs)
+        columns = cls._columns
+
+        if 'order_policy' in columns:
+            # We add a new order policy to the selection
+            selection = list(columns['order_policy'].selection)
+            selection.append(('none', _('No invoicing and no shipping.')))
+            cls._columns['order_policy'].selection = tuple(selection)
+
+        return cls
+
+class SaleOrder(osv.osv):
+
+    """
+    We override the sale.order model to remove / add some things :
+        - Remove the 'Generate invoice' button
+        - Add a 'generate commission invoice' button
+        - Add a 'Total commission' field
+        - Total price will take commission into account
+    """
+
+    __metaclass__ = SaleOrderMeta
+
+    def get_total_commissions(self, cursor, user_id, ids, field_name, arg, context=None):
+
+        """
+        Compute the total amount of commissions on this sale order.
+        """
+
+        orders = self.browse(cursor, user_id, ids, context=context)
+        result = {}
+        
+        for order in orders:
+            total_commission = 0
+            for line in order.order_line:
+                price = line.price_unit * (1 - (line.discount or 0.0) / 100.0) * line.product_uom_qty
+                commission = price * (line.commission / 100.0)
+                total_commission += commission
+            result[order.id] = total_commission
+
+        return result
+
+    _inherit = 'sale.order'
+    _name = 'sale.order'
+
+    _columns = {
+        'total_commissions' : fields.function(get_total_commissions, method=True, string=_('Total commissions'))
+    }
+
+SaleOrder()
+
 class SaleOrderLine(osv.osv):
 
     """
@@ -49,7 +108,7 @@ class SaleOrderLine(osv.osv):
         product = self.pool.get('product.product').browse(cursor, user_id, product_id)
         commission = 0
 
-        if supplier_id is None: # Use the default supplier if none specified
+        if not supplier_id: # Use the default supplier if none specified
             supplier_id = product.seller_id.id
 
         for supplier_info in product.seller_ids:
@@ -94,8 +153,11 @@ class SaleOrderLine(osv.osv):
 
         result = {}
 
-        if product_id and supplier_id:
-            supplier_id, commission = self.get_supplier_and_commission(cursor, user_id, product_id, supplier_id)
+        if product_id:
+            if supplier_id:
+                supplier_id, commission = self.get_supplier_and_commission(cursor, user_id, product_id, supplier_id)
+            else:
+                commission = 0
             result['value'] = {'commission' : commission}
         return result
 

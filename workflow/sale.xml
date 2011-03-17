@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!--
+        We edit the sale to add a new order policy: No order policy.
+        This policy won't generate any stock move nor invoice.
+        -->
+    </data>
+</openerp>
