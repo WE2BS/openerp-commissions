@@ -30,7 +30,7 @@
     "depends": ["base", "sale"],
     "init_xml": [],
     "demo_xml": [],
-    "update_xml": ['views/product.xml'],
+    "update_xml": ['views/product.xml', 'views/sale.xml'],
     "active": False,
     "test": [],
     "installable": True

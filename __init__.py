@@ -18,3 +18,4 @@
 #
 
 import product
+import sale
