@@ -20,25 +20,6 @@
 from osv import osv, fields
 from tools.translate import _
 
-class SaleOrderMeta(type):
-
-    """
-    We create a metaclass to add a selection value to order_policy field.
-    """
-
-    def __new__(mcs, *args, **kwargs):
-
-        cls = super(SaleOrderMeta, mcs).__new__(mcs, *args, **kwargs)
-        columns = cls._columns
-
-        if 'order_policy' in columns:
-            # We add a new order policy to the selection
-            selection = list(columns['order_policy'].selection)
-            selection.append(('none', _('No invoicing and no shipping.')))
-            cls._columns['order_policy'].selection = tuple(selection)
-
-        return cls
-
 class SaleOrder(osv.osv):
 
     """
@@ -48,8 +29,6 @@ class SaleOrder(osv.osv):
         - Add a 'Total commission' field
         - Total price will take commission into account
     """
-
-    __metaclass__ = SaleOrderMeta
 
     def get_total_commissions(self, cursor, user_id, ids, field_name, arg, context=None):
 
@@ -74,7 +53,13 @@ class SaleOrder(osv.osv):
     _name = 'sale.order'
 
     _columns = {
+        'disable_logistic' : fields.boolean(_('Disable all the logistic and invoice stuff'), help=_(
+            'Check this if you are a Sale Agent you don\'t need picking/invoicing/etc')),
         'total_commissions' : fields.function(get_total_commissions, method=True, string=_('Total commissions'))
+    }
+
+    _defaults = {
+        'disable_logistic' : True, # TODO: Make this a Company option
     }
 
 SaleOrder()

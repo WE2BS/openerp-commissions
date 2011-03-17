@@ -2,8 +2,32 @@
 <openerp>
     <data>
         <!--
-        We edit the sale to add a new order policy: No order policy.
-        This policy won't generate any stock move nor invoice.
+        We edit the sale workflow to support the 'disable_logistic' option.
         -->
+        <record id="act_done_noligistic" model="workflow.activity">
+            <field name="wkf_id" ref="sale.wkf_sale"/>
+            <field name="name">done_noligistic</field>
+            <field name="flow_stop">True</field>
+            <field name="kind">function</field>
+            <field name="action">write({'state':'done'})</field>
+            <field name="join_mode">AND</field>
+        </record>
+        <record id="trans_router_no_logistic" model="workflow.transition">
+            <field name="act_from" ref="sale.act_router"/>
+            <field name="act_to" ref="act_done_noligistic"/>
+            <field name="condition">(disable_logistic==True)</field>
+        </record>
+        <delete id="sale.trans_router_wait_invoice" model="workflow.transition"/>
+        <delete id="sale.trans_router_wait_ship" model="workflow.transition"/>
+        <record id="trans_router_wait_invoice" model="workflow.transition">
+            <field name="act_from" ref="sale.act_router"/>
+            <field name="act_to" ref="sale.act_wait_invoice"/>
+            <field name="condition">(disable_logistic==False)</field>
+        </record>
+        <record id="trans_router_wait_ship" model="workflow.transition">
+            <field name="act_from" ref="sale.act_router"/>
+            <field name="act_to" ref="sale.act_wait_ship"/>
+            <field name="condition">(disable_logistic==False)</field>
+        </record>
     </data>
 </openerp>
