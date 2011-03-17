@@ -103,7 +103,7 @@ class SaleOrderLine(osv.osv):
     _inherit = 'sale.order.line'
 
     _columns = {
-        'commission' : fields.float(_('Commission')),
+        'commission' : fields.float(_('Commission (%)')),
         'supplier_id' : fields.many2one('res.partner', _('Supplier'),
             help=_('Specify the supplier you want to use. This will change the commission value.')),
     }
