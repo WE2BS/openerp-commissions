@@ -10,25 +10,26 @@
                 <data>
                     <!-- Sale order line modifications -->
                     <xpath expr="//page[@string='Order Line']/separator[@string='Taxes']" position="before">
-                        <separator colspan="5" string="Commission"/>
+                        <separator colspan="5" string="Commission" invisible="not context.get('commission_order')"/>
                         <field name="supplier_id" attrs="{'readonly': [('product_id', '=', False)]}"
                                context="{'search_default_supplier' : True}"
-                               on_change="supplier_id_change(product_id, supplier_id)"/>
-                        <field name="commission"/>
+                               on_change="supplier_id_change(product_id, supplier_id)"
+                               invisible="not context.get('commission_order')"/>
+                        <field name="commission" invisible="not context.get('commission_order')"/>
                     </xpath>
                     <xpath expr="//tree[@string='Sales Order Lines']/field[@name='discount']" position="before">
-                        <field name="supplier_id"/>
-                        <field name="commission"/>
+                        <field name="supplier_id" invisible="not context.get('commission_order')"/>
+                        <field name="commission" invisible="not context.get('commission_order')"/>
                     </xpath>
                     <!-- Sale order modifications -->
-                    <xpath expr="//button[@name='manual_invoice']" position="replace">
-                        <button name="create_commission_invoice" string="Make commissions invoices"/>
+                    <xpath expr="//button[@name='manual_invoice']" position="attributes">
+                        <attribute name="invisible">not context.get('commission_order')</attribute>
                     </xpath>
                     <xpath expr="//field[@name='amount_tax']" position="after">
-                        <field name="total_commissions" readonly="1"/>
+                        <field name="total_commissions" readonly="1" invisible="not context.get('commission_order')"/>
                     </xpath>
                     <xpath expr="//button[@string='Advance Invoice']" position="attributes">
-                        <attribute name="invisible">1</attribute>
+                        <attribute name="invisible">not context.get('commission_order')</attribute>
                     </xpath>
                     <xpath expr="//separator[@string='Logistic']" position="after">
                         <field name="disable_logistic"/>
@@ -36,5 +37,15 @@
                 </data>
             </field>
         </record>
+        <!-- Menu -->
+        <record model="ir.actions.act_window" id="action_sale_order_commission">
+            <field name="name">commission.sale.order</field>
+            <field name="context">{'commission_order': True, "search_default_user_id":uid}</field>
+            <field name="res_model">sale.order</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <menuitem id="menu_sale_order" name="Sale Order (for commissions)" groups="base.group_sale_salesman,base.group_sale_manager"
+                  action="action_sale_order_commission" parent="base.menu_sales"/>
     </data>
 </openerp>
