@@ -162,7 +162,7 @@ class SaleOrderLine(osv.osv):
 
     _columns = {
         'commission' : fields.float(_('Commission (%)')),
-        'commission_amount' : fields.function(get_commission_amount, _('Commission amount')),
+        'commission_amount' : fields.function(get_commission_amount, _('Commission amount'), type='float', method=True),
         'supplier_id' : fields.many2one('res.partner', _('Supplier'),
             help=_('Specify the supplier you want to use. This will change the commission value.')),
     }
