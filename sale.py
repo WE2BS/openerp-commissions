@@ -42,9 +42,7 @@ class SaleOrder(osv.osv):
         for order in orders:
             total_commission = 0
             for line in order.order_line:
-                price = line.price_unit * (1 - (line.discount or 0.0) / 100.0) * line.product_uom_qty
-                commission = price * (line.commission / 100.0)
-                total_commission += commission
+                total_commission += line.commission_amount
             result[order.id] = total_commission
 
         return result
@@ -130,6 +128,19 @@ class SaleOrderLine(osv.osv):
 
         return result
 
+    def get_commission_amount(self, cursor, user_id, ids, field_name, arg, context=None):
+
+        """
+        Returns the amount of the commission.
+        """
+
+        lines = self.browse(cursor, user_id, ids, context=context)
+        result = {}
+        for line in lines:
+            price = line.price_unit * (1 - (line.discount or 0.0) / 100.0) * line.product_uom_qty
+            result[line.id] = price * (line.commission / 100.0)
+        return result
+
     def supplier_id_change(self, cursor, user_id, ids, product_id, supplier_id):
 
         """
@@ -151,6 +162,7 @@ class SaleOrderLine(osv.osv):
 
     _columns = {
         'commission' : fields.float(_('Commission (%)')),
+        'commission_amount' : fields.function(get_commission_amount, _('Commission amount')),
         'supplier_id' : fields.many2one('res.partner', _('Supplier'),
             help=_('Specify the supplier you want to use. This will change the commission value.')),
     }
