@@ -34,6 +34,18 @@
                     <xpath expr="//separator[@string='Logistic']" position="after">
                         <field name="disable_logistic"/>
                     </xpath>
+                    <xpath expr="//field[@name='incoterm']" position="attributes">
+                        <attribute name="attrs">{'readonly' : [('disable_logistic', '=', True)]}</attribute>
+                    </xpath>
+                    <xpath expr="//field[@name='picking_policy']" position="attributes">
+                        <attribute name="attrs">{'readonly' : [('disable_logistic', '=', True)]}</attribute>
+                    </xpath>
+                    <xpath expr="//field[@name='order_policy']" position="attributes">
+                        <attribute name="attrs">{'readonly' : [('disable_logistic', '=', True)]}</attribute>
+                    </xpath>
+                    <xpath expr="//field[@name='invoice_quantity']" position="attributes">
+                        <attribute name="attrs">{'readonly' : [('disable_logistic', '=', True)]}</attribute>
+                    </xpath>
                 </data>
             </field>
         </record>
@@ -43,39 +55,11 @@
             <field name="res_model">sale.order</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph</field>
-            <field name="context">{'search_default_user_id' : uid}</field>
+            <field name="context">{'search_default_user_id' : uid, 'only_commissions' : True}</field>
             <field name="search_view_id" ref="sale.view_sales_order_filter"/>
             <field name="type">ir.actions.act_window</field>
         </record>
         <menuitem id="menu_sale_order" name="Sale Order (for commissions)" groups="base.group_sale_salesman,base.group_sale_manager"
                   action="action_sale_order_commission" parent="base.menu_sales"/>
-
-        <!-- Sale Order Line tree view, used to show commissions -->
-        <record id="commission_sale_order_line_tree_view" model="ir.ui.view">
-            <field name="priority" eval="20"/> <!-- Let the old view the default -->
-            <field name="name">commission.sale.order.line.tree</field>
-            <field name="type">tree</field>
-            <field name="model">sale.order.line</field>
-            <field name="arch" type="xml">
-                <tree string="Sales Order Lines">
-                    <field colspan="4" name="name"/>
-                    <field name="product_uom_qty" string="Qty"/>
-                    <field name="product_uom" string="UoM"/>
-                    <field name="commission"/>
-                    <field name="commission_amount"/>
-                    <field name="commission_invoiced"/>
-                </tree>
-            </field>
-        </record>
-        <!-- Menu -->
-        <record model="ir.actions.act_window" id="action_commissions">
-            <field name="name">Commissions</field>
-            <field name="res_model">sale.order.line</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree</field>
-            <field name="view_id" ref="commission_sale_order_line_tree_view"/>
-        </record>
-        <menuitem id="menu_commissions" name="Commissions" groups="base.group_sale_salesman,base.group_sale_manager"
-                  action="action_commissions" parent="sale.menu_invoiced"/>
     </data>
 </openerp>

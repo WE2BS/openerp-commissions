@@ -20,9 +20,11 @@
 from osv import osv, fields
 from tools.tranlate import _
 
-class InvoiceCommission(osv.osv_memory):
+class Commission(osv.osv_memory):
 
     """
-    This wizard will manage commissions invoicing.
+    Represents a commission. These objects are created when a Sale Order with commissions is confirmed.
     """
+
+    
 

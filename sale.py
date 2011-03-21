@@ -47,17 +47,24 @@ class SaleOrder(osv.osv):
 
         return result
 
+    def get_default_logistic(self, cursor, user_id, context=None):
+
+        if context is None:
+            return False
+
+        return 'only_commissions' in context
+
     _inherit = 'sale.order'
     _name = 'sale.order'
 
     _columns = {
-        'disable_logistic' : fields.boolean(_('Disable all the logistic and invoice stuff'), help=_(
+        'disable_logistic' : fields.boolean(_('No logistic'), help=_(
             'Check this if you are a Sale Agent you don\'t need picking/invoicing/etc')),
-        'total_commissions' : fields.function(get_total_commissions, method=True, string=_('Total commissions'))
+        'total_commissions' : fields.function(get_total_commissions, method=True, string=_('Total commissions')),
     }
 
     _defaults = {
-        'disable_logistic' : True, # TODO: Make this a Company option
+        'disable_logistic' : get_default_logistic,
     }
 
 SaleOrder()
@@ -163,7 +170,6 @@ class SaleOrderLine(osv.osv):
     _columns = {
         'commission' : fields.float(_('Commission (%)')),
         'commission_amount' : fields.function(get_commission_amount, string= _('Commission amount'), type='float', method=True),
-        'commission_invoiced' : fields.boolean(_('Is commission invoiced ?')),
         'supplier_id' : fields.many2one('res.partner', _('Supplier'),
             help=_('Specify the supplier you want to use. This will change the commission value.')),
     }
