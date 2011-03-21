@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="group_sale_agent" model="res.groups">
+            <field name="name">Sales / Sale Agent</field>
+        </record>
+    </data>
+</openerp>

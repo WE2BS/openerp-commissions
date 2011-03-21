@@ -26,5 +26,10 @@ class Commission(osv.osv_memory):
     Represents a commission. These objects are created when a Sale Order with commissions is confirmed.
     """
 
-    
+    _name = 'commission.commission'
+    _columns = {
+        'supplier_id' : fields.many2one('res.partner', _('Supplier'), required=True),
+        'percent' : fields.float(_('Commission (%)'), required=True),
+        'value' : fields.float(_('Commission'), required=True),
+    }
 

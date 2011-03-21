@@ -52,14 +52,22 @@ class SaleOrder(osv.osv):
         if context is None:
             return False
 
-        return 'only_commissions' in context
+        return context.get('only_commissions', False)
+
+    def action_make_commissions(self, cursor, user_id, ids, context=None):
+
+        """
+        Generate the commissions associated to this order.
+        """
+
+        
 
     _inherit = 'sale.order'
     _name = 'sale.order'
 
     _columns = {
         'disable_logistic' : fields.boolean(_('No logistic'), help=_(
-            'Check this if you are a Sale Agent you don\'t need picking/invoicing/etc')),
+            'Check this if you are a Sale Agent who does\'t need picking/invoicing/etc')),
         'total_commissions' : fields.function(get_total_commissions, method=True, string=_('Total commissions')),
     }
 

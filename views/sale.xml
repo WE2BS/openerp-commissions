@@ -11,28 +11,30 @@
                 <data>
                     <!-- Sale order line modifications -->
                     <xpath expr="//page[@string='Order Line']/separator[@string='Taxes']" position="before">
-                        <separator colspan="5" string="Commission"/>
-                        <field name="supplier_id" attrs="{'readonly': [('product_id', '=', False)]}"
-                               context="{'search_default_supplier' : True}"
-                               on_change="supplier_id_change(product_id, supplier_id)"/>
-                        <field name="commission"/>
+                        <group groups="commissions.group_sale_agent" colspan="5">
+                            <separator colspan="5" string="Commission"/>
+                            <field name="supplier_id" attrs="{'readonly': [('product_id', '=', False)], 'required' : [('commission', '&gt;', 0)]}"
+                                   context="{'search_default_supplier' : True}"
+                                   on_change="supplier_id_change(product_id, supplier_id)"/>
+                            <field name="commission" attrs="{'readonly': [('supplier_id', '=', False)]}"/>
+                        </group>
                     </xpath>
                     <xpath expr="//tree[@string='Sales Order Lines']/field[@name='discount']" position="before">
-                        <field name="supplier_id"/>
-                        <field name="commission"/>
+                        <field name="supplier_id" groups="commissions.group_sale_agent"/>
+                        <field name="commission" groups="commissions.group_sale_agent"/>
                     </xpath>
                     <!-- Sale order modifications -->
                     <xpath expr="//button[@name='manual_invoice']" position="attributes">
-                        <attribute name="invisible">1</attribute>
+                        <attribute name="invisible">context.get('only_commissions', False)</attribute>
                     </xpath>
                     <xpath expr="//field[@name='amount_tax']" position="after">
-                        <field name="total_commissions" readonly="1"/>
+                        <field name="total_commissions" readonly="1" groups="commissions.group_sale_agent"/>
                     </xpath>
                     <xpath expr="//button[@string='Advance Invoice']" position="attributes">
-                        <attribute name="invisible">1</attribute>
+                        <attribute name="invisible">context.get('only_commissions', False)</attribute>
                     </xpath>
                     <xpath expr="//separator[@string='Logistic']" position="after">
-                        <field name="disable_logistic"/>
+                        <field name="disable_logistic" groups="commissions.group_sale_agent"/>
                     </xpath>
                     <xpath expr="//field[@name='incoterm']" position="attributes">
                         <attribute name="attrs">{'readonly' : [('disable_logistic', '=', True)]}</attribute>
@@ -45,6 +47,10 @@
                     </xpath>
                     <xpath expr="//field[@name='invoice_quantity']" position="attributes">
                         <attribute name="attrs">{'readonly' : [('disable_logistic', '=', True)]}</attribute>
+                    </xpath>
+                    <xpath expr="//button[@name='order_confirm']" position="after">
+                        <button name="action_make_commissions" states="done" string="Make commissions"
+                           type="object" icon="gtk-apply" groups="commissions.group_sale_agent"/>
                     </xpath>
                 </data>
             </field>
@@ -59,7 +65,7 @@
             <field name="search_view_id" ref="sale.view_sales_order_filter"/>
             <field name="type">ir.actions.act_window</field>
         </record>
-        <menuitem id="menu_sale_order" name="Sale Order (for commissions)" groups="base.group_sale_salesman,base.group_sale_manager"
-                  action="action_sale_order_commission" parent="base.menu_sales"/>
+        <menuitem id="menu_sale_order_commission" name="Sale Order (Commissions only)" groups="base.group_sale_salesman,base.group_sale_manager"
+            action="action_sale_order_commission" parent="base.menu_sales"/>
     </data>
 </openerp>
