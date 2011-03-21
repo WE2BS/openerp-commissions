@@ -65,7 +65,7 @@ SaleOrder()
 class SaleOrderLine(osv.osv):
 
     """
-    We override this model to add a commission and supplier fields. 
+    We override this model to add a commission and supplier fields.
     """
 
     def get_suppliers(self, cursor, user_id, ids, field_name, arg, context=None):
@@ -162,7 +162,8 @@ class SaleOrderLine(osv.osv):
 
     _columns = {
         'commission' : fields.float(_('Commission (%)')),
-        'commission_amount' : fields.function(get_commission_amount, _('Commission amount'), type='float', method=True),
+        'commission_amount' : fields.function(get_commission_amount, string= _('Commission amount'), type='float', method=True),
+        'commission_invoiced' : fields.boolean(_('Is commission invoiced ?')),
         'supplier_id' : fields.many2one('res.partner', _('Supplier'),
             help=_('Specify the supplier you want to use. This will change the commission value.')),
     }

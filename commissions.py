@@ -20,27 +20,9 @@
 from osv import osv, fields
 from tools.tranlate import _
 
-STATES = (
-    ('waiting', 'Waiting'),
-    ('invoiced', 'Invoiced'),
-)
-
-class Commission(osv.osv):
+class InvoiceCommission(osv.osv_memory):
 
     """
-    Represents the commission associated with a sale.order.line. 
+    This wizard will manage commissions invoicing.
     """
 
-    _name = 'commission.commission'
-    _columns = {
-        'line_id' : fields.many2one('sale.order.line', _('Sale Order Line'), required=True),
-        'order_id' : fields.related('line_id', 'order_id', relation='sale.order', type='many2one', string=_('Sale Order')),
-        'commission' : fields.related('line_id', 'commission', type='float', string=_('Commission (%)')),
-        'commission_amount' : fields.related('line_id', 'commission_amount', type='float', string=_('Commission')),
-        'supplier' : fields.related('line_id', 'supplier_id', relation='res.partner', type='many2one', string=_('Supplier')),
-        'state' : fields.selection(STATES, _('State')),
-        'invoice_id' : fields.related('invoice_line_id', 'invoice_id', relation='account.invoice', string=_('Invoice')),
-        'invoice_line_id' : fields.many2one('account.invoice.line', _('Invoice Line')),
-    }
-
-Commission()
