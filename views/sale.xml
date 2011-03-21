@@ -3,7 +3,6 @@
     <data>
         <record id="commission_sale_order_form_view" model="ir.ui.view">
             <field name="inherit_id" ref="sale.view_order_form"/>
-            <field name="priority" eval="100"/> <!-- Let the old view the default -->
             <field name="name">commission.sale.order.form</field>
             <field name="type">form</field>
             <field name="model">sale.order</field>

@@ -30,7 +30,8 @@
     "depends": ["base", "sale"],
     "init_xml": [],
     "demo_xml": [],
-    "update_xml": ['security/groups.xml', 'views/product.xml', 'views/sale.xml', 'workflow/sale.xml'],
+    "update_xml": ['security/groups.xml', 'views/product.xml', 'views/sale.xml', 'workflow/sale.xml',
+                   'views/commissions.xml'],
     "active": False,
     "test": [],
     "installable": True

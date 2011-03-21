@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="commissions_tree_view" model="ir.ui.view">
+            <field name="name">commission.list.view</field>
+            <field name="type">tree</field>
+            <field name="model">commissions.commission</field>
+            <field name="arch" type="xml">
+                <tree string="Commissions">
+                    <field name="supplier_id"/>
+                    <field name="order_id"/>
+                    <field name="product_id"/>
+                    <field name="commission"/>
+                    <field name="commission_amount"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+        <!-- Menu -->
+        <record model="ir.actions.act_window" id="action_commissions">
+            <field name="name">Commissions</field>
+            <field name="res_model">commissions.commission</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <menuitem id="menu_commissions" name="Commissions" groups="commissions.group_sale_agent"
+            action="action_commissions" parent="sale.menu_invoiced"/>
+    </data>
+</openerp>

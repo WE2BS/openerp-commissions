@@ -22,7 +22,6 @@ from tools.translate import _
 
 STATES = (
     ('draft', _('Draft')),
-    ('confirmed', _('Confirmed')),
     ('invoiced', _('Invoiced')),
 )
 
@@ -33,10 +32,11 @@ class Commission(osv.osv_memory):
     after the sale order has been confirmed.
     """
 
-    _name = 'commission.commission'
+    _name = 'commissions.commission'
     _columns = {
         'order_line_id' : fields.many2one('sale.order.line', _('Sale Order Line'), ondelete='CASCADE'),
         'order_id' : fields.related('order_line_id', 'order_id', relation='sale.order', string=_('Sale Order')),
+        'product_id' : fields.related('order_line_id', 'product_id', relation='product.product', string=_('Product')),
         'commission' : fields.related('order_line_id', 'commission', string=_('Commission (%)')),
         'commission_amount' : fields.related('order_line_id', 'commission_amount', string=_('Amount')),
         'supplier_id' : fields.related('order_line_id', 'supplier_id', relation='res.partner', string=_('Supplier')),
