@@ -18,18 +18,29 @@
 #
 
 from osv import osv, fields
-from tools.tranlate import _
+from tools.translate import _
+
+STATES = (
+    ('draft', _('Draft')),
+    ('confirmed', _('Confirmed')),
+    ('invoiced', _('Invoiced')),
+)
 
 class Commission(osv.osv_memory):
 
     """
-    Represents a commission. These objects are created when a Sale Order with commissions is confirmed.
+    Represents a commission. These objects are create when the user clicks on 'Make commissions',
+    after the sale order has been confirmed.
     """
 
     _name = 'commission.commission'
     _columns = {
-        'supplier_id' : fields.many2one('res.partner', _('Supplier'), required=True),
-        'percent' : fields.float(_('Commission (%)'), required=True),
-        'value' : fields.float(_('Commission'), required=True),
+        'order_line_id' : fields.many2one('sale.order.line', _('Sale Order Line'), ondelete='CASCADE'),
+        'order_id' : fields.related('order_line_id', 'order_id', relation='sale.order', string=_('Sale Order')),
+        'commission' : fields.related('order_line_id', 'commission', string=_('Commission (%)')),
+        'commission_amount' : fields.related('order_line_id', 'commission_amount', string=_('Amount')),
+        'supplier_id' : fields.related('order_line_id', 'supplier_id', relation='res.partner', string=_('Supplier')),
+        'state' : fields.selection(STATES, _('State')),
     }
 
+Commission()
