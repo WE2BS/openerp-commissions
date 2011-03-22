@@ -1,18 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+        <record id="commissions_search_view" model="ir.ui.view">
+            <field name="name">commission.search.view</field>
+            <field name="type">search</field>
+            <field name="model">commissions.commission</field>
+            <field name="arch" type="xml">
+                <search string="Commissions">
+                    <group expand="1" string="Group By...">
+                        <filter string="Vendor" icon="terp-personal" context="{'group_by':'vendor_id'}"/>
+                        <filter string="Supplier" icon="terp-partner" context="{'group_by':'supplier_id'}"/>
+                        <filter string="Order" icon="terp-product" context="{'group_by':'order_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
         <record id="commissions_tree_view" model="ir.ui.view">
             <field name="name">commission.list.view</field>
             <field name="type">tree</field>
             <field name="model">commissions.commission</field>
             <field name="arch" type="xml">
                 <tree string="Commissions">
+                    <field name='vendor_id'/>
                     <field name="supplier_id"/>
                     <field name="order_id"/>
                     <field name="product_id"/>
+                    <field name="product_qty"/>
+                    <field name="product_uom"/>
                     <field name="commission"/>
                     <field name="commission_amount"/>
-                    <field name="state"/>
+                    <field name="invoiced"/>
                 </tree>
             </field>
         </record>
@@ -21,7 +38,7 @@
             <field name="name">Commissions</field>
             <field name="res_model">commissions.commission</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree</field>
         </record>
         <menuitem id="menu_commissions" name="Commissions" groups="commissions.group_sale_agent"
             action="action_commissions" parent="sale.menu_invoiced"/>

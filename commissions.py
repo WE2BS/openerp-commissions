@@ -20,12 +20,7 @@
 from osv import osv, fields
 from tools.translate import _
 
-STATES = (
-    ('draft', _('Draft')),
-    ('invoiced', _('Invoiced')),
-)
-
-class Commission(osv.osv_memory):
+class Commission(osv.osv):
 
     """
     Represents a commission. These objects are create when the user clicks on 'Make commissions',
@@ -34,13 +29,19 @@ class Commission(osv.osv_memory):
 
     _name = 'commissions.commission'
     _columns = {
-        'order_line_id' : fields.many2one('sale.order.line', _('Sale Order Line'), ondelete='CASCADE'),
-        'order_id' : fields.related('order_line_id', 'order_id', relation='sale.order', string=_('Sale Order')),
-        'product_id' : fields.related('order_line_id', 'product_id', relation='product.product', string=_('Product')),
-        'commission' : fields.related('order_line_id', 'commission', string=_('Commission (%)')),
-        'commission_amount' : fields.related('order_line_id', 'commission_amount', string=_('Amount')),
-        'supplier_id' : fields.related('order_line_id', 'supplier_id', relation='res.partner', string=_('Supplier')),
-        'state' : fields.selection(STATES, _('State')),
+        'order_line_id' : fields.many2one('sale.order.line', _('Sale Order Line'), ondelete='CASCADE', required=True),
+        'order_id' : fields.many2one('sale.order', string=_('Sale Order'), required=True),
+        'vendor_id' : fields.many2one('res.users', string=_('Vendor'), required=True),
+        'product_id' : fields.related('order_line_id', 'product_id', type='many2one', relation='product.product', string=_('Product')),
+        'product_uom' : fields.related('order_line_id', 'product_uom', type='many2one', relation='product.uom', string=_('UoM')),
+        'product_qty' : fields.related('order_line_id', 'product_uom_qty', type='float', string=_('Quantity')),
+        'commission' : fields.related('order_line_id', 'commission', type='float', string=_('Commission (%)')),
+        'commission_amount' : fields.related('order_line_id', 'commission_amount', type='float', string=_('Amount')),
+        'supplier_id' : fields.many2one('res.partner', string=_('Supplier'), required=True),
+        'invoiced' : fields.boolean(_('Invoiced')),
+    }
+    _defaults = {
+        'invoiced' : False,
     }
 
 Commission()
