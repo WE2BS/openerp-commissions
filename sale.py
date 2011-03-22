@@ -115,6 +115,7 @@ class SaleOrder(osv.osv):
             'view_mode' : 'tree',
             'res_model' : 'commissions.commission',
             'search_view_id' : search_view_id,
+            'context' : {'search_default_order_id' : ids[0]},
             'nodestroy' : True, # See https://bugs.launchpad.net/openobject-client/+bug/651784
         }
 

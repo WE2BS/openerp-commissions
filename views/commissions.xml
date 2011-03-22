@@ -13,9 +13,9 @@
                     <field name="supplier_id" select="1" widget="selection"/>
                     <newline/>
                     <group expand="1" string="Group By..." colspan="11" col="11">
-                        <filter string="Vendor" icon="terp-personal" context="{'group_by':'vendor_id'}"/>
-                        <filter string="Supplier" icon="terp-partner" context="{'group_by':'supplier_id'}"/>
-                        <filter string="Order" icon="terp-product" context="{'group_by':'order_id'}"/>
+                        <filter string="Vendor" icon="terp-personal" context="{'group_by': 'vendor_id'}"/>
+                        <filter string="Supplier" icon="terp-partner" context="{'group_by': 'supplier_id'}"/>
+                        <filter string="Order" icon="terp-product" context="{'group_by': 'order_id'}"/>
                     </group>
                 </search>
             </field>
