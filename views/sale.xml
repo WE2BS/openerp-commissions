@@ -48,8 +48,16 @@
                         <attribute name="attrs">{'readonly' : [('disable_logistic', '=', True)]}</attribute>
                     </xpath>
                     <xpath expr="//button[@name='order_confirm']" position="after">
-                        <button name="action_make_commissions" states="done" string="Make commissions"
-                           type="object" icon="gtk-apply" groups="commissions.group_sale_agent"/>
+                        <field name='are_commissions_created' invisible="1"/>
+                        <button name="action_make_commissions" string="Make commissions" readonly="1"
+                           type="object" icon="gtk-apply" groups="commissions.group_sale_agent" states="done"
+                           attrs="{'readonly' : [('are_commissions_created', '=', True)]}"/>
+                        <button name="action_show_commissions" string="Show commissions"
+                           type="object" icon="gtk-apply" groups="commissions.group_sale_agent" states="done"
+                           attrs="{'readonly' : [('are_commissions_created', '=', False)]}"/>
+                    </xpath>
+                    <xpath expr="//group[@col='13'][@colspan='4']" position="attributes">
+                        <attribute name="col">15</attribute>
                     </xpath>
                 </data>
             </field>

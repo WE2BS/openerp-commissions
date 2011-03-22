@@ -24,7 +24,7 @@ class Commission(osv.osv):
 
     """
     Represents a commission. These objects are create when the user clicks on 'Make commissions',
-    after the sale order has been confirmed.
+    after the sale order has been confirmed. The invoice is created with the wizard.
     """
 
     _name = 'commissions.commission'
@@ -38,6 +38,8 @@ class Commission(osv.osv):
         'commission' : fields.related('order_line_id', 'commission', type='float', string=_('Commission (%)')),
         'commission_amount' : fields.related('order_line_id', 'commission_amount', type='float', string=_('Amount')),
         'supplier_id' : fields.many2one('res.partner', string=_('Supplier'), required=True),
+        'invoice_line_id' : fields.many2one('account.invoice.line', _('Invoice line')),
+        'invoice_id' : fields.related('invoice_line_id', 'invoice_id', type="many2one", relation='account.invoice', string= _('Invoice')),
         'invoiced' : fields.boolean(_('Invoiced')),
     }
     _defaults = {

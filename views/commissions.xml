@@ -7,7 +7,12 @@
             <field name="model">commissions.commission</field>
             <field name="arch" type="xml">
                 <search string="Commissions">
-                    <group expand="1" string="Group By...">
+                    <filter icon="terp-dolar" string="Invoiced" domain="[('invoiced','=',True)]" help="Invoiced commissions"/>
+                    <separator orientation="vertical"/>
+                    <field name="order_id" select="1"/>
+                    <field name="supplier_id" select="1" widget="selection"/>
+                    <newline/>
+                    <group expand="1" string="Group By..." colspan="11" col="11">
                         <filter string="Vendor" icon="terp-personal" context="{'group_by':'vendor_id'}"/>
                         <filter string="Supplier" icon="terp-partner" context="{'group_by':'supplier_id'}"/>
                         <filter string="Order" icon="terp-product" context="{'group_by':'order_id'}"/>

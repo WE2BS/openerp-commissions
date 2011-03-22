@@ -54,13 +54,69 @@ class SaleOrder(osv.osv):
 
         return context.get('only_commissions', False)
 
+    def are_commissions_created(self, cursor, user_id, ids, field_name, arg, context=None):
+
+        """
+        A boolean functional field which contains TRUE if all commissions have been generated.
+        """
+
+        orders = self.browse(cursor, user_id, ids, context=context)
+        result = {}
+
+        for order in orders:
+            valid_lines_ids = self.pool.get('sale.order.line').search(cursor, user_id,
+                [('order_id', '=', order.id), ('commission_amount', '>', 0), ('supplier_id', '!=', False)])
+            result[order.id] = len(valid_lines_ids) == len(order.commissions)
+
+        return result
+
     def action_make_commissions(self, cursor, user_id, ids, context=None):
 
         """
         Generate the commissions associated to this order.
         """
 
-        
+        order = self.browse(cursor, user_id, ids[0], context=context)
+        lines = order.order_line
+
+        for line in lines:
+            if line.commission_amount <= 0:
+                continue
+            if not line.supplier_id.id:
+                continue
+            exists = False # TODO: May have a better way to check this
+            for commission in order.commissions:
+                if commission.order_line_id.id == line.id:
+                    exists = True
+            if exists:
+                continue
+            self.pool.get('commissions.commission').create(cursor, user_id, {
+                'order_id' : order.id,
+                'order_line_id' : line.id,
+                'vendor_id' : order.user_id.id or user_id,
+                'supplier_id' : line.supplier_id.id,
+            })
+
+        return True
+
+    def action_show_commissions(self, cursor, user_id, ids, context=None):
+
+        """
+        Show the generated commissions object.
+        """
+
+        search_view_id = self.pool.get('ir.ui.view').search(cursor, user_id,
+            [('model', '=', 'commissions.commission'),('type','=','search')])[0]
+
+        return {
+            'name' : _('Commissions'),
+            'type' : 'ir.actions.act_window',
+            'view_type' : 'form',
+            'view_mode' : 'tree',
+            'res_model' : 'commissions.commission',
+            'search_view_id' : search_view_id,
+            'nodestroy' : True, # See https://bugs.launchpad.net/openobject-client/+bug/651784
+        }
 
     _inherit = 'sale.order'
     _name = 'sale.order'
@@ -68,11 +124,14 @@ class SaleOrder(osv.osv):
     _columns = {
         'disable_logistic' : fields.boolean(_('No logistic'), help=_(
             'Check this if you are a Sale Agent who does\'t need picking/invoicing/etc')),
-        'total_commissions' : fields.function(get_total_commissions, method=True, string=_('Total commissions')),
+        'commissions' : fields.one2many('commissions.commission', 'order_id', _('Commissions')),
+        'total_commissions' : fields.function(get_total_commissions, method=True, type='float', string=_('Total commissions')),
+        'are_commissions_created' : fields.function(are_commissions_created, method=True, type='boolean'),
     }
 
     _defaults = {
         'disable_logistic' : get_default_logistic,
+        'are_commissions_created' : False,
     }
 
 SaleOrder()
