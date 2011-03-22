@@ -1,10 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+        <record id="commission_invoice_wizard_form_view" model="ir.ui.view">
+            <field name="name">commission.invoice.wizard.form.view</field>
+            <field name="type">form</field>
+            <field name="model">commissions.invoice.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Generate Invoice">
+                    <field name="supplier_id"/>
+                </form>
+            </field>
+        </record>
         <record id="action_invoice_wizard" model="ir.actions.act_window">
+            <field name="name">Generate Invoice</field>
             <field name="res_model">commissions.invoice.wizard</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
+            <field name="view_id" ref="commission_invoice_wizard_form_view"/>
             <field name="target">new</field>
         </record>
         <record id="action_generate_invoices" model="ir.values">
@@ -14,7 +26,6 @@
             <field name="value" eval="'ir.actions.act_window,%d'%action_invoice_wizard"/>
             <field name="key">action</field>
             <field name="model">commissions.commission</field>
-            <field name="model_id" ref="model_commissions_commission"/>
         </record>
     </data>
 </openerp>
