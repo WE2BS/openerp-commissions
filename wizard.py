@@ -17,22 +17,18 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-{
-    "name": "Commission",
-    "version": "0.1",
-    "author": "UIDE/WE2BS",
-    "category": "Generic Modules/Sales & Purchases",
-    "website": "https://github.com/thibautd/openerp-commision",
-    "description":
-        """
-        This module let you manage commisions of your salesman.
-        """,
-    "depends": ["base", "sale"],
-    "init_xml": [],
-    "demo_xml": [],
-    "update_xml": ['security/groups.xml', 'views/product.xml', 'views/sale.xml', 'workflow/sale.xml',
-                   'views/commissions.xml', 'wizards/commissions_invoice.xml'],
-    "active": False,
-    "test": [],
-    "installable": True
-}
+from osv import osv, fields
+from tools.translate import _
+
+class CreateCommissionsInvoice(osv.osv_memory):
+
+    """
+    This wizard generates an invoice for the selected commissions items. 
+    """
+
+    _name = 'commissions.invoice.wizard'
+    _columns = {
+        'supplier_id' : fields.many2one('res.partner', _('Supplier')),
+    }
+
+CreateCommissionsInvoice()
