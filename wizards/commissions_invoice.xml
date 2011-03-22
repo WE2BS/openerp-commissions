@@ -21,7 +21,7 @@
         </record>
         <record id="action_generate_invoices" model="ir.values">
             <field name="object" eval="1" />
-            <field name="name">Generate invoice</field>
+            <field name="name">Generate commissions invoice</field>
             <field name="key2">client_action_multi</field>
             <field name="value" eval="'ir.actions.act_window,%d'%action_invoice_wizard"/>
             <field name="key">action</field>
