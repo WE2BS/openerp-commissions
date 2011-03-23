@@ -112,7 +112,7 @@ class SaleOrder(osv.osv):
             'name' : _('Commissions'),
             'type' : 'ir.actions.act_window',
             'view_type' : 'form',
-            'view_mode' : 'tree',
+            'view_mode' : 'tree,form',
             'res_model' : 'commissions.commission',
             'search_view_id' : search_view_id,
             'context' : {'search_default_order_id' : ids[0]},

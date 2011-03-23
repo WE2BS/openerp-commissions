@@ -38,6 +38,25 @@
                 </tree>
             </field>
         </record>
+        <record id="commissions_form_view" model="ir.ui.view">
+            <field name="name">commission.form.view</field>
+            <field name="type">form</field>
+            <field name="model">commissions.commission</field>
+            <field name="arch" type="xml">
+                <form string="Commissions">
+                    <field name='vendor_id'/>
+                    <field name="order_id" domain="[('state', '=', 'done')]"/>
+                    <field name="order_line_id" domain="[('order_id', '=', order_id)]"/>
+                    <field name="supplier_id"/>
+                    <field name="product_id" readonly="1"/>
+                    <field name="product_qty" readonly="1"/>
+                    <field name="product_uom" readonly="1"/>
+                    <field name="commission" readonly="1"/>
+                    <field name="commission_amount" readonly="1"/>
+                    <field name="invoiced" readonly="1"/>
+                </form>
+            </field>
+        </record>
         <!-- Menu -->
         <record model="ir.actions.act_window" id="action_commissions">
             <field name="name">Commissions</field>

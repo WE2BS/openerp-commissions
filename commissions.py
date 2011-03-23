@@ -27,7 +27,17 @@ class Commission(osv.osv):
     after the sale order has been confirmed. The invoice is created with the wizard.
     """
 
+    def check_order_line_id(self, cursor, user_id, ids, context=None):
+
+        """
+        Checks that the order line id belongs to the order id.
+        """
+
+        commission = self.browse(cursor, user_id, ids[0], context=context)
+        return (commission.order_line_id in commission.order_id.order_line)
+
     _name = 'commissions.commission'
+
     _columns = {
         'order_line_id' : fields.many2one('sale.order.line', _('Sale Order Line'), ondelete='CASCADE', required=True),
         'order_id' : fields.many2one('sale.order', string=_('Sale Order'), required=True),
@@ -42,8 +52,13 @@ class Commission(osv.osv):
         'invoice_id' : fields.related('invoice_line_id', 'invoice_id', type="many2one", relation='account.invoice', string= _('Invoice')),
         'invoiced' : fields.boolean(_('Invoiced')),
     }
+
     _defaults = {
         'invoiced' : False,
     }
+
+    _constraints = [
+        (check_order_line_id, _('The Order Line must belong to the Order.'), ['order_line_id', 'order_id'])
+    ]
 
 Commission()
