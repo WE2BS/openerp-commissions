@@ -44,7 +44,7 @@ class Commission(osv.osv):
     _name = 'commissions.commission'
     _columns = {
         'order_line_id' : fields.many2one('sale.order.line', _('Sale Order Line'), required=True, ondelete='RESTRICT'),
-        'order_id' : fields.related('order_line_id', 'order_id', type='many2one', relation='sale.order', string=_('Order')),
+        'order_id' : fields.many2one('sale.order', string=_('Order'), required=True),
         'order_customer_id' : fields.related('order_id', 'partner_id', type='many2one', relation="res.partner", string=_('Customer')),
         'vendor_id' : fields.related('order_id', 'user_id', type='many2one', relation='res.users', string=_('Vendor')),
         'product_id' : fields.related('order_line_id', 'product_id', type='many2one', relation='product.product', string=_('Product')),
