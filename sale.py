@@ -91,10 +91,7 @@ class SaleOrder(osv.osv):
             if exists:
                 continue
             self.pool.get('commissions.commission').create(cursor, user_id, {
-                'order_id' : order.id,
                 'order_line_id' : line.id,
-                'vendor_id' : order.user_id.id or user_id,
-                'supplier_id' : line.supplier_id.id,
             })
 
         return True

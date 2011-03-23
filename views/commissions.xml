@@ -11,12 +11,13 @@
                     <separator orientation="vertical"/>
                     <field name="order_id" select="1"/>
                     <field name="supplier_id" select="1" widget="selection"/>
-                    <newline/>
+                    <field name="order_customer_id"/>
+                    <!--<newline/>
                     <group expand="1" string="Group By..." colspan="11" col="11">
                         <filter string="Vendor" icon="terp-personal" context="{'group_by': 'vendor_id'}" domain="[]"/>
                         <filter string="Supplier" icon="terp-partner" context="{'group_by': 'supplier_id'}" domain="[]"/>
                         <filter string="Order" icon="terp-product" context="{'group_by': 'order_id'}" domain="[]"/>
-                    </group>
+                    </group>-->
                 </search>
             </field>
         </record>
@@ -27,13 +28,14 @@
             <field name="arch" type="xml">
                 <tree string="Commissions">
                     <field name='vendor_id'/>
-                    <field name="supplier_id"/>
+                    <field name="order_customer_id"/>
                     <field name="order_id"/>
+                    <field name="supplier_id"/>
                     <field name="product_id"/>
                     <field name="product_qty"/>
                     <field name="product_uom"/>
                     <field name="commission"/>
-                    <field name="commission_amount"/>
+                    <field name="commission_amount" sum="Total"/>
                     <field name="invoiced"/>
                 </tree>
             </field>

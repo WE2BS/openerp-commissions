@@ -27,38 +27,24 @@ class Commission(osv.osv):
     after the sale order has been confirmed. The invoice is created with the wizard.
     """
 
-    def check_order_line_id(self, cursor, user_id, ids, context=None):
-
-        """
-        Checks that the order line id belongs to the order id.
-        """
-
-        commission = self.browse(cursor, user_id, ids[0], context=context)
-        return (commission.order_line_id in commission.order_id.order_line)
-
     _name = 'commissions.commission'
-
     _columns = {
         'order_line_id' : fields.many2one('sale.order.line', _('Sale Order Line'), ondelete='CASCADE', required=True),
-        'order_id' : fields.many2one('sale.order', string=_('Sale Order'), required=True),
-        'vendor_id' : fields.many2one('res.users', string=_('Vendor'), required=True),
+        'order_id' : fields.related('order_line_id', 'order_id', type='many2one', relation='sale.order', string=_('Order')),
+        'order_customer_id' : fields.related('order_id', 'partner_id', type='many2one', relation="res.partner", string=_('Customer')),
+        'vendor_id' : fields.related('order_id', 'user_id', type='many2one', relation='res.users', string=_('Vendor')),
         'product_id' : fields.related('order_line_id', 'product_id', type='many2one', relation='product.product', string=_('Product')),
         'product_uom' : fields.related('order_line_id', 'product_uom', type='many2one', relation='product.uom', string=_('UoM')),
         'product_qty' : fields.related('order_line_id', 'product_uom_qty', type='float', string=_('Quantity')),
         'commission' : fields.related('order_line_id', 'commission', type='float', string=_('Commission (%)')),
         'commission_amount' : fields.related('order_line_id', 'commission_amount', type='float', string=_('Amount')),
-        'supplier_id' : fields.many2one('res.partner', string=_('Supplier'), required=True),
+        'supplier_id' : fields.related('order_line_id', 'supplier_id', type='many2one', relation='res.partner', string=_('Supplier')),
         'invoice_line_id' : fields.many2one('account.invoice.line', _('Invoice line')),
         'invoice_id' : fields.related('invoice_line_id', 'invoice_id', type="many2one", relation='account.invoice', string= _('Invoice')),
         'invoiced' : fields.boolean(_('Invoiced')),
     }
-
     _defaults = {
         'invoiced' : False,
     }
-
-    _constraints = [
-        (check_order_line_id, _('The Order Line must belong to the Order.'), ['order_line_id', 'order_id'])
-    ]
 
 Commission()
