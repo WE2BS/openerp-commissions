@@ -7,7 +7,7 @@
             <field name="model">commissions.commission</field>
             <field name="arch" type="xml">
                 <search string="Commissions">
-                    <filter icon="terp-dolar" string="Invoiced" domain="[('invoiced','=',True)]" help="Invoiced commissions"/>
+                    <filter name="not_invoiced" icon="terp-dolar" string="Not Invoiced" domain="[('invoiced','!=',True)]" help="Not invoiced commissions"/>
                     <separator orientation="vertical"/>
                     <field name="order_id" select="1"/>
                     <field name="supplier_id" select="1" widget="selection"/>
@@ -66,6 +66,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="commissions_search_view"/>
+            <field name="context">{'search_default_not_invoiced' : True}</field>
             <field name="filter" eval="True"/>
             <field name="type">ir.actions.act_window</field>
         </record>

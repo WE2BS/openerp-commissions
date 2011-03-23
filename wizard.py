@@ -80,7 +80,7 @@ class CreateCommissionsInvoice(osv.osv_memory):
                 invoice_lines.setdefault(commission.order_customer_id, list())
                 invoice_lines[commission.order_customer_id].append(commission)
             for customer, commissions in invoice_lines.iteritems():
-                self.pool.get('account.invoice.line').create(cursor, user_id, {
+                line_id = self.pool.get('account.invoice.line').create(cursor, user_id, {
                     'name' : customer.name,
                     'invoice_id' : invoice_id,
                     'product_id' : product.id,
@@ -89,6 +89,9 @@ class CreateCommissionsInvoice(osv.osv_memory):
                     'quantity' : 1,
                     'origin' : commission.order_id.name,
                 }, context=context)
+                # Update commission status - Now invoiced !
+                self.pool.get('commissions.commission').write(cursor, user_id,
+                    [commission.id for commission in commissions], {'invoice_line_id': line_id}, context=context)
 
         view_id = self.pool.get('ir.ui.view').read(cursor, user_id,
             self.pool.get('ir.ui.view').search(

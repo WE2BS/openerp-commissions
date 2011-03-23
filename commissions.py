@@ -27,9 +27,23 @@ class Commission(osv.osv):
     after the sale order has been confirmed. The invoice is created with the wizard.
     """
 
+    def is_invoiced(self, cursor, user_id, ids, field_name, arg, context=None):
+
+        """
+        Returns True if the commissions has an invoice line.
+        """
+
+        commissions = self.browse(cursor, user_id, ids, context=context)
+        result = {}
+
+        for commission in commissions:
+            result[commission.id] = commission.invoice_line_id.id and True or False
+
+        return result
+
     _name = 'commissions.commission'
     _columns = {
-        'order_line_id' : fields.many2one('sale.order.line', _('Sale Order Line'), ondelete='CASCADE', required=True),
+        'order_line_id' : fields.many2one('sale.order.line', _('Sale Order Line'), required=True, ondelete='RESTRICT'),
         'order_id' : fields.related('order_line_id', 'order_id', type='many2one', relation='sale.order', string=_('Order')),
         'order_customer_id' : fields.related('order_id', 'partner_id', type='many2one', relation="res.partner", string=_('Customer')),
         'vendor_id' : fields.related('order_id', 'user_id', type='many2one', relation='res.users', string=_('Vendor')),
@@ -39,12 +53,9 @@ class Commission(osv.osv):
         'commission' : fields.related('order_line_id', 'commission', type='float', string=_('Commission (%)')),
         'commission_amount' : fields.related('order_line_id', 'commission_amount', type='float', string=_('Amount')),
         'supplier_id' : fields.related('order_line_id', 'supplier_id', type='many2one', relation='res.partner', string=_('Supplier')),
-        'invoice_line_id' : fields.many2one('account.invoice.line', _('Invoice line')),
+        'invoice_line_id' : fields.many2one('account.invoice.line', _('Invoice line'), ondelete='SET NULL'),
         'invoice_id' : fields.related('invoice_line_id', 'invoice_id', type="many2one", relation='account.invoice', string= _('Invoice')),
-        'invoiced' : fields.boolean(_('Invoiced')),
-    }
-    _defaults = {
-        'invoiced' : False,
+        'invoiced' : fields.function(is_invoiced, type='boolean', method=True, string=_('Invoiced')),
     }
 
 Commission()
