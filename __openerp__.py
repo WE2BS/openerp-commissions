@@ -27,7 +27,7 @@
         """
         This module let you manage commisions of your salesman.
         """,
-    "depends": ["base", "sale"],
+    "depends": ["base", "account", "sale"],
     "init_xml": [],
     "demo_xml": [],
     "update_xml": ['security/groups.xml', 'views/product.xml', 'views/sale.xml', 'workflow/sale.xml',
