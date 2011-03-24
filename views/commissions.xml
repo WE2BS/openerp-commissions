@@ -10,8 +10,9 @@
                     <filter name="not_invoiced" icon="terp-dolar" string="Not Invoiced" domain="[('invoiced','!=',True)]" help="Not invoiced commissions"/>
                     <separator orientation="vertical"/>
                     <field name="order_id" select="1"/>
+                    <field name="order_date" select="1"/>
                     <field name="supplier_id" select="1" widget="selection"/>
-                    <field name="order_customer_id"/>
+                    <field name="order_customer_id" select="1"/>
                     <!--<newline/>
                     <group expand="1" string="Group By..." colspan="11" col="11">
                         <filter string="Vendor" icon="terp-personal" context="{'group_by': 'vendor_id'}" domain="[]"/>
@@ -30,6 +31,7 @@
                     <field name='vendor_id'/>
                     <field name="order_customer_id"/>
                     <field name="order_id"/>
+                    <field name="order_date"/>
                     <field name="supplier_id"/>
                     <field name="product_id"/>
                     <field name="product_qty"/>
@@ -49,7 +51,7 @@
                     <field name='vendor_id'/>
                     <field name="order_id" domain="[('state', '=', 'done')]"/>
                     <field name="order_line_id" domain="[('order_id', '=', order_id)]"/>
-                    <field name="supplier_id"/>
+                    <field name="supplier_id" readonly="1"/>
                     <field name="product_id" readonly="1"/>
                     <field name="product_qty" readonly="1"/>
                     <field name="product_uom" readonly="1"/>

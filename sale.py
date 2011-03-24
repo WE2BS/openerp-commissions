@@ -97,6 +97,23 @@ class SaleOrder(osv.osv):
 
         return True
 
+    def action_done(self, cursor, user_id, ids, context=None):
+
+        """
+        In the case of a 'No logistic' order, we mark all the order lines as being invoiced when the order is done.
+        """
+
+        orders = self.browse(cursor, user_id, ids, context=context)
+
+        for order in orders:
+            if order.disable_logistic:
+                self.pool.get('sale.order.line').write(
+                    cursor, user_id, [line.id for line in order.order_line], {'invoiced' : True}, context=context)
+
+        self.write(cursor, user_id, ids, {'state' : 'done'}, context=context)
+        
+        return True
+
     def action_show_commissions(self, cursor, user_id, ids, context=None):
 
         """

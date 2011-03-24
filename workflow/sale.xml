@@ -13,7 +13,7 @@
             <field name="name">done</field>
             <field name="flow_stop">True</field>
             <field name="kind">function</field>
-            <field name="action">write({'state':'done'})</field>
+            <field name="action">action_done()</field>
             <field name="join_mode">XOR</field>
         </record>
         <record id="act_pre_done" model="workflow.activity">

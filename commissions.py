@@ -49,7 +49,7 @@ class Commission(osv.osv):
         Search function used for the 'Invoiced' functional field.
         """
 
-        final_criteria = ['invoiced']
+        final_criteria = []
         for search_criteria in args:
             if search_criteria == ('invoiced', '!=', True):
                 final_criteria.append(('invoice_line_id', '=', False))
@@ -65,6 +65,7 @@ class Commission(osv.osv):
         'order_line_id' : fields.many2one('sale.order.line', _('Sale Order Line'), required=True, ondelete='RESTRICT'),
         'order_id' : fields.many2one('sale.order', string=_('Order'), required=True),
         'order_customer_id' : fields.related('order_id', 'partner_id', type='many2one', relation="res.partner", string=_('Customer')),
+        'order_date' : fields.related('order_id', 'date_order', type='date', string=_('Order Date')),
         'vendor_id' : fields.related('order_id', 'user_id', type='many2one', relation='res.users', string=_('Vendor')),
         'product_id' : fields.related('order_line_id', 'product_id', type='many2one', relation='product.product', string=_('Product')),
         'product_uom' : fields.related('order_line_id', 'product_uom', type='many2one', relation='product.uom', string=_('UoM')),
