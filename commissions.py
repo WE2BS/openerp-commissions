@@ -17,6 +17,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+import logging
+
 from osv import osv, fields
 from tools.translate import _
 
@@ -41,6 +43,23 @@ class Commission(osv.osv):
 
         return result
 
+    def search_commissions_invoiced(self, cursor, user_id, obj, name, args, context):
+
+        """
+        Search function used for the 'Invoiced' functional field.
+        """
+
+        final_criteria = ['invoiced']
+        for search_criteria in args:
+            if search_criteria == ('invoiced', '!=', True):
+                final_criteria.append(('invoice_line_id', '=', False))
+            else:
+                logging.warning('Unknown search criteria: %s' % search_criteria)
+
+        commissions_ids = self.search(cursor, user_id, final_criteria, context=context)
+
+        return [('id', 'in', commissions_ids)]
+
     _name = 'commissions.commission'
     _columns = {
         'order_line_id' : fields.many2one('sale.order.line', _('Sale Order Line'), required=True, ondelete='RESTRICT'),
@@ -55,7 +74,7 @@ class Commission(osv.osv):
         'supplier_id' : fields.related('order_line_id', 'supplier_id', type='many2one', relation='res.partner', string=_('Supplier')),
         'invoice_line_id' : fields.many2one('account.invoice.line', _('Invoice line'), ondelete='SET NULL'),
         'invoice_id' : fields.related('invoice_line_id', 'invoice_id', type="many2one", relation='account.invoice', string= _('Invoice')),
-        'invoiced' : fields.function(is_invoiced, type='boolean', method=True, string=_('Invoiced')),
+        'invoiced' : fields.function(is_invoiced, fnct_search=search_commissions_invoiced, type='boolean', method=True, string=_('Invoiced')),
     }
 
 Commission()
