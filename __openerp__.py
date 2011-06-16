@@ -31,7 +31,7 @@
     "init_xml": [],
     "demo_xml": [],
     "update_xml": ['security/groups.xml', 'views/product.xml', 'views/sale.xml', 'workflow/sale.xml',
-                   'views/commissions.xml', 'wizards/commissions_invoice.xml'],
+                   'views/commissions.xml', 'wizards/commissions_invoice.xml', 'security/ir.model.access.csv'],
     "active": False,
     "test": [],
     "installable": True

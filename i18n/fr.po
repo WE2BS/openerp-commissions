@@ -24,7 +24,7 @@ msgstr "Désactiver la logistique"
 #. module: commissions
 #: model:ir.ui.menu,name:commissions.menu_sale_order_commission
 msgid "Sale Order (Commissions only)"
-msgstr "Bon de commande (Pas de logistique)"
+msgstr "Bons de commande (Pas de logistique)"
 
 #. module: commissions
 #: code:addons/commissions/sale.py:142

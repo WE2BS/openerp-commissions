@@ -1,0 +1,4 @@
+"id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
+"access_commissions_sa","commissions.commission - Sale Agent","model_commissions_commission","group_sale_agent",1,1,1,1
+"access_commissions_sm","commissions.commission - Sale Manager","model_commissions_commission","base.group_sale_manager",1,1,1,1
+"access_commissions_su","commissions.commission - Sale User","model_commissions_commission","base.group_sale_salesman",1,1,1,0
